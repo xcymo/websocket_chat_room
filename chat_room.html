@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>聊天室</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <div v-if="!hasName">
+            <input type="text" v-model="username" placeholder="请输入用户名">
+            <button @click="setName">确定</button>
+            <button @click="closeWs">离开</button>
+        </div>
+        <div v-if="hasName">
+            <div class="rec-box" id='rec-box'>
+                <div class="msg-item" v-for="item in msg_rec" :class="{'align-right':item.userid===myid}">
+                    <div v-if="item.type==3">
+                        <div class="userinfo">{{item.username}} {{item.time | timeFormat}}</div>
+                        <div>
+                            <div class="msg-content">{{item.content}}</div>
+                        </div>
+                    </div>
+                    <div v-if="item.type==4" class="sys-info">
+                        <span>
+                            用户 {{item.username}} {{item.checkType=='in'?'进入':'离开'}}了聊天室
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="enter-box">
+                <textarea v-model.trim="msg" rows="5" @keyup="sendByEnter($event)"></textarea>
+                <button @click="sendMsg">发送</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.js"></script>
+    <script>
+        let vue = new Vue({
+            el: "#app",
+            data: {
+                msg: "",
+                ws: "",
+                username: "",
+                hasName: false,
+                msg_rec: [],
+                myid: '',
+                can_close: false,
+            },
+            mounted() {
+                this.myid = Math.floor(Math.random() * 10000)
+                this.ws = new WebSocket('ws://localhost:3000')
+                this.ws.onopen = () => {
+                    console.log('ws open')
+                }
+                this.ws.onmessage = (info) => {
+                    info = JSON.parse(info.data)
+                    if (info.type == 3 || info.type == 4) {   // 3 服务器返回正常聊天消息，4 系统广播
+                        this.msg_rec = [...this.msg_rec, ...[info]]
+                    } else if (info.type == 2) {    // 2 服务器做好关闭准备
+                        this.can_close = true
+                    }
+                }
+                this.ws.onclose = info => {
+                    console.log(info)
+                }
+                window.addEventListener('beforeunload', (e) => {
+                    if (!this.can_close) {
+                        e.preventDefault()
+                        let msg = {
+                            userid: this.myid,
+                            username: this.username,
+                            time: new Date().getTime(),
+                            type: "2"
+                        }
+                        this.ws.send(JSON.stringify(msg))
+                        e.returnValue = ""
+                    }
+                })
+            },
+            updated() {
+                // 接收到消息后自动滚动到最底部
+                let dom = document.getElementById('rec-box');
+                if (dom) {
+                    dom.scrollTop = dom.scrollHeight
+                }
+            },
+            methods: {
+                // websocket链接send时的type说明：1 请求登陆，2 请求退出，3 发送消息
+                sendMsg() {
+                    if (!this.msg) {
+                        return
+                    }
+                    let msg = {
+                        content: this.msg,
+                        userid: this.myid,
+                        username: this.username,
+                        time: new Date().getTime(),
+                        type: "3"
+                    }
+                    this.ws.send(JSON.stringify(msg))
+                    this.msg = ''
+                },
+                setName() {
+                    if (this.username) {
+                        this.hasName = true
+                    } else {
+                        return
+                    }
+                    let msg = {
+                        userid: this.myid,
+                        username: this.username,
+                        time: new Date().getTime(),
+                        type: '1'
+                    }
+                    this.ws.send(JSON.stringify(msg))
+                },
+                closeWs() {
+                    this.ws.close(1000)
+                },
+                sendByEnter(e) {
+                    if (e.keyCode == 13) {
+                        this.sendMsg()
+                    }
+                }
+            },
+            filters: {
+                timeFormat(val) {
+                    let time = new Date(val)
+                    let year = time.getFullYear()
+                    let month = time.getMonth() + 1
+                    let date = time.getDate()
+                    let hour = time.getHours()
+                    let minute = time.getMinutes()
+                    let second = time.getSeconds()
+                    return `${year}/${month}/${date} ${hour}:${minute}:${second}`
+                }
+            }
+        })
+
+    </script>
+
+</body>
+
+</html>

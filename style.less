@@ -1,0 +1,52 @@
+.rec-box {
+    background: rgb(146, 202, 132);
+    height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    padding: 10px;
+
+    .align-right {
+        text-align: right;
+    }
+    .sys-info{
+        text-align: center;
+        margin-top: 5px;
+        span{
+            display: inline-block;
+            background: #999;
+            color: #fff;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 15px;
+        }
+    }
+    .msg-item {
+        margin-top: 10px;
+        .userinfo {
+            color: #00f;
+            font-size: 13px;
+        }
+
+        .msg-content {
+            color: #12074b;
+            margin-top: 5px;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 18px;
+            background: #5c5c5c;
+            max-width: 500px;
+        }
+    }
+}
+.enter-box{
+    display: flex;
+    textarea{
+        flex: 1;
+    }
+    button{
+        width: 40px;
+    }
+}

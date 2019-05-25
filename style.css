@@ -1,0 +1,50 @@
+.rec-box {
+  background: #92ca84;
+  height: 400px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  padding: 10px;
+}
+.rec-box .align-right {
+  text-align: right;
+}
+.rec-box .sys-info {
+  text-align: center;
+  margin-top: 5px;
+}
+.rec-box .sys-info span {
+  display: inline-block;
+  background: #999;
+  color: #fff;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 15px;
+}
+.rec-box .msg-item {
+  margin-top: 10px;
+}
+.rec-box .msg-item .userinfo {
+  color: #00f;
+  font-size: 13px;
+}
+.rec-box .msg-item .msg-content {
+  color: #12074b;
+  margin-top: 5px;
+  display: inline-block;
+  padding: 5px 15px;
+  border-radius: 20px;
+  font-weight: 800;
+  font-size: 18px;
+  background: #5c5c5c;
+  max-width: 500px;
+}
+.enter-box {
+  display: flex;
+}
+.enter-box textarea {
+  flex: 1;
+}
+.enter-box button {
+  width: 40px;
+}

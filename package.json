@@ -1,0 +1,20 @@
+{
+    "name": "websocket-practice",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "build": "babel index.js -o server.js",
+        "serve": "npm run build && node server.js"
+    },
+    "author": "xcy",
+    "license": "ISC",
+    "dependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-preset-env": "^1.7.0",
+        "ws": "^7.0.0"
+    },
+    "devDependencies": {
+        "babel": "^6.23.0"
+    }
+}
