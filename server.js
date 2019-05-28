@@ -12,7 +12,7 @@ var wss = new WebSocketServer({
     port: 3000
 });
 
-var userListConnPool = {}; // 所有聊天室用户的链接池，key:websocket
+var userListConnPool = {}; // 所有聊天室用户的链接池，key:websocket 
 var id2key = {}; // 用户的id和对应的信息，包括key，id:userinfo
 
 wss.on('connection', function (ws, req) {
@@ -43,8 +43,10 @@ wss.on('connection', function (ws, req) {
 
             // 向用户发送断开确认
             getWs(message.userid) ? getWs(message.userid).send(JSON.stringify(message)) : '';
-            delete userListConnPool[id2key[message.userid].key];
-            delete id2key[message.userid];
+            if (id2key[message.userid]) {
+                delete userListConnPool[id2key[message.userid].key];
+                delete id2key[message.userid];
+            }
 
             // 向所有人告知有人退出了聊天室
             var _msg = {

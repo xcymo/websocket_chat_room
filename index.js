@@ -38,8 +38,10 @@ wss.on('connection', function (ws, req) {
 
             // 向用户发送断开确认
             getWs(message.userid) ? getWs(message.userid).send(JSON.stringify(message)) : ''
-            delete userListConnPool[id2key[message.userid].key]
-            delete id2key[message.userid]
+            if(id2key[message.userid]){
+                delete userListConnPool[id2key[message.userid].key]
+                delete id2key[message.userid]
+            }
 
             // 向所有人告知有人退出了聊天室
             let msg = {
