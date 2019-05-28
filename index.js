@@ -6,7 +6,7 @@ let wss = new WebSocketServer({
 })
 
 
-let userListConnPool = {}       // 所有聊天室用户的链接池，key:websocket
+let userListConnPool = {}       // 所有聊天室用户的链接池，key:websocket 
 let id2key = {}     // 用户的id和对应的信息，包括key，id:userinfo
 
 wss.on('connection', function (ws, req) {
