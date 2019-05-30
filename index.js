@@ -16,7 +16,7 @@ wss.on('connection', function (ws, req) {
         message = JSON.parse(message)
         // 用户请求登入   
         if (message.type == 1) {
-            console.log(`id为${message.userid}，用户名为${message.username}的用户登录了`)
+            console.log(`id为 ${message.userid} ，用户名为 ${message.username} 的用户登录了`)
             // 用户第一次发消息时，向链接池保存该链接，并记录用户id对应的链接是哪个
             userListConnPool[req.headers['sec-websocket-key']] = ws
             id2key[message.userid] = {
@@ -34,7 +34,7 @@ wss.on('connection', function (ws, req) {
 
             // 用户登出请求，将该用户的链接从连接池删除
         } else if (message.type == 2) {
-            console.log(`id为${message.userid}，用户名为${message.username}的用户退出了`)
+            console.log(`id为 ${message.userid} ，用户名为 ${message.username} 的用户退出了`)
 
             // 向用户发送断开确认
             getWs(message.userid) ? getWs(message.userid).send(JSON.stringify(message)) : ''

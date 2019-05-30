@@ -58,16 +58,19 @@
                     console.log('ws open')
                 }
                 this.ws.onmessage = (info) => {
+                    // 服务器返回的type，2：做好关闭准备，3：正常聊天消息，4：系统广播
                     info = JSON.parse(info.data)
-                    if (info.type == 3 || info.type == 4) {   // 3 服务器返回正常聊天消息，4 系统广播
+                    if (info.type == 3 || info.type == 4) {
                         this.msg_rec = [...this.msg_rec, ...[info]]
-                    } else if (info.type == 2) {    // 2 服务器做好关闭准备
+                    } else if (info.type == 2) {
                         this.can_close = true
                     }
                 }
                 this.ws.onclose = info => {
                     console.log(info)
                 }
+
+                // 关闭页面前让用户确认是否关闭链接
                 window.addEventListener('beforeunload', (e) => {
                     if (!this.can_close) {
                         e.preventDefault()
